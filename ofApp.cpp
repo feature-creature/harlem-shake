@@ -109,7 +109,11 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    // save a png screenshot for documentation in bin/data
+    // use date and framerate for unique naming
+    if(key == 's'){
+        ofSaveScreen(ofGetTimestampString() + "-" + ofToString(ofGetFrameNum()) + ".png");
+    }
 }
 
 //--------------------------------------------------------------
