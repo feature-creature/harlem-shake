@@ -32,7 +32,11 @@ public:
 
     bool goCrazy;
 
-    float stepSize;
+    float stepSizeMax;
+
+    float noiseStep;
+    int noiseVarianceY;
+
 
     // declare and initialize constants
     // which have fixed size dependents -- arrays

@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     // initialize variables
+    goCrazy = false;
     objSizeX = 3;
     objSizeY = 3;
     spacingX = objSizeX * 6;
@@ -12,8 +13,11 @@ void ofApp::setup(){
     startingX = (ofGetWidth() - (spacingX * numX)) /2;
     startingY = (ofGetHeight() - (spacingY * numY)) /2;
 
-    stepSize = 20;
-    goCrazy = false;
+    // max possible amount of movement per frame
+    // originally named stepSize, rename for clarity
+    stepSizeMax = 20;
+    noiseStep = 0.02;
+    noiseVarianceY = 500;
 
     // iterate over matrix by rows, then columns
     for(int i = 0; i < numX; i++){
@@ -22,7 +26,10 @@ void ofApp::setup(){
         }
     }
 
+    // initialize background settings
+    // for ghosting effect instead of standard background
     ofSetBackgroundColor(0);
+    ofSetBackgroundAuto(false);
 
 
 }
@@ -35,14 +42,15 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    // ghosting instead of background
+    // ghosting effect
     ofSetColor(0,20);
     ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
 
-    // reset color to default settings : white, full alpha
+    // reset color to default settings of white, full alpha
     ofSetColor(255,255);
 
     // 2D matrix
+    ofPushMatrix();
     // center 2D matrix
     ofTranslate(startingX, startingY);
     // position individual ellipses in matrix
@@ -50,18 +58,22 @@ void ofApp::draw(){
         for(int j = 0; j < numY; j++){
             int locX = i * spacingX;
             int locY = j * spacingY;
-            if(goCrazy == false){
-                //locX = locX + noiseSeeds[i][j];
-                //locY = locY + noiseSeeds[i][j];
+            if(goCrazy == true || ( i == 20 && j == 23 )){
+
+                int stepX = stepSizeMax * ofSignedNoise( noiseSeeds[i][j] );
+                int stepY = stepSizeMax * ofSignedNoise( noiseSeeds[i][j] + noiseVarianceY );
+                noiseSeeds[i][j] += noiseStep;
+
+                locX = locX + stepX;
+                locY = locY + stepY;
             }
             ofPushMatrix();
                 ofTranslate(locX,locY);
                 ofDrawEllipse(0,0,objSizeX,objSizeY);
             ofPopMatrix();
-
-            //noiseSeeds[i][j] = ofRandom(0,1000);
         }
     }
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------
