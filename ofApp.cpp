@@ -3,9 +3,10 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     // initialize variables
-    circleSize = 3;
-    spacingX = circleSize * 6;
-    spacingY = circleSize * 6;
+    objSizeX = 3;
+    objSizeY = 3;
+    spacingX = objSizeX * 6;
+    spacingY = objSizeY * 6;
     // center matrix within variable screen size
     // !! see if this breaks if screen size smaller than matrix needs
     startingX = (ofGetWidth() - (spacingX * numX)) /2;
@@ -44,14 +45,14 @@ void ofApp::draw(){
     // 2D matrix
     // center 2D matrix
     ofTranslate(startingX, startingY);
-    // position individual circles in matrix
+    // position individual ellipses in matrix
     for(int i = 0; i < numX; i++){
         for(int j = 0; j < numY; j++){
             int locX = i * spacingX;
             int locY = j * spacingY;
             ofPushMatrix();
                 ofTranslate(locX,locY);
-                ofDrawCircle(0,0,circleSize);
+                ofDrawEllipse(0,0,objSizeX,objSizeY);
             ofPopMatrix();
 
             //noiseSeeds[i][j] = ofRandom(0,1000);
