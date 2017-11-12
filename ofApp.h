@@ -21,4 +21,21 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    int startingX;
+    int startingY;
+
+    int spacingX;
+    int spacingY;
+
+    bool goCrazy;
+
+    float stepSize;
+
+    // declare and initialize constants
+    // which have fixed size dependents -- arrays
+    // unnecessary for vectors, which are dynamically sized
+    static const int numX = 25;
+    static const int numY = 25;
+    float noiseSeeds[numX][numY];
+
 };

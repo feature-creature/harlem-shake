@@ -2,6 +2,22 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    // initialize variables
+    startingX = 0;
+    startingY = 0;
+    spacingX = ofGetWidth() / numX;
+    spacingY = ofGetHeight() / numY;
+
+    stepSize = 20;
+    goCrazy = false;
+
+    // iterate over matrix by rows, then columns
+    for(int i = 0; i < numX; i++){
+        for(int j = 0; j < numY; j++){
+            noiseSeeds[i][j] = ofRandom(0,1000);
+        }
+    }
+
 
 }
 
