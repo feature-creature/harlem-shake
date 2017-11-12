@@ -2,19 +2,30 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    // initialize variables
+    /*  initialize global variables
+        I added a few extra global variables
+        to make the code a little more abstract.
+        these deal with object size and noise.
+    */
+
     goCrazy = false;
     objSizeX = 3;
     objSizeY = 3;
     spacingX = objSizeX * 6;
     spacingY = objSizeY * 6;
-    // center matrix within variable screen size
-    // !! see if this breaks if screen size smaller than matrix needs
+
+    /*  this gives us a centered, standard grid, regardless if the screen size changes.
+        it finds the difference between the width of the screen and width of the matrix
+        and uses that to give the matrix an equal padding on all sides.
+    */
+    // !! TODO: see if the program breaks if screen size smaller than the matrix itself.
     startingX = (ofGetWidth() - (spacingX * numX)) /2;
     startingY = (ofGetHeight() - (spacingY * numY)) /2;
 
-    // max possible amount of movement per frame
-    // originally named stepSize, rename for clarity
+    /*  maximum possible amount of movement for an ellipse per frame.
+        originally named stepSize, rename to stepSizeMax for clarity.
+        added two noise global variables so that they can be easily updated.
+    */
     stepSizeMax = 20;
     noiseStep = 0.02;
     noiseVarianceY = 500;
@@ -49,25 +60,45 @@ void ofApp::draw(){
     // reset color to default settings of white, full alpha
     ofSetColor(255,255);
 
-    // 2D matrix
+    /*  draw 2D matrix
+        this push/pop isn't technically necessary
+        but I like to use it to keep the matrix contained
+        if I want to add new features in the future.
+    */
     ofPushMatrix();
-    // center 2D matrix
+    // center the entire 2D matrix on the screen
     ofTranslate(startingX, startingY);
-    // position individual ellipses in matrix
+    // position the matrix's individual ellipses
+    // iterate over the matrix by rows, then by columns
     for(int i = 0; i < numX; i++){
         for(int j = 0; j < numY; j++){
+            // calculate the individual ellipse' default location
+            // and set to local variable
             int locX = i * spacingX;
             int locY = j * spacingY;
-            if(goCrazy == true || ( i == 20 && j == 23 )){
-
+            /*  only perform the 'extra' calculations if needed:
+                harlem-shake-ify the current ellipse's location
+                if we are currently dealing with the 'harlem shake starter' ellipse
+                (which is independent of goCrazy variable)
+                or
+                if we are in goCrazy mode harlem-shake-ify all ellipses locations
+                (all ellipses that are and are not dependent on goCrazy variable)
+            */
+            if(( i == 20 && j == 23 ) || goCrazy == true){
+                /*  ofSignedNoise returns a float between -1.0 and 1.0 (provides up and down motion)
+                    multiply it by the maximum possible step size.
+                    (consistenly) increment up the ellipse's noiseSeed value for movement.
+                */
                 int stepX = stepSizeMax * ofSignedNoise( noiseSeeds[i][j] );
                 int stepY = stepSizeMax * ofSignedNoise( noiseSeeds[i][j] + noiseVarianceY );
                 noiseSeeds[i][j] += noiseStep;
 
+                // update the default location values with the harlem-shake-ify values
                 locX = locX + stepX;
                 locY = locY + stepY;
             }
             ofPushMatrix();
+                // translate and draw current ellipse
                 ofTranslate(locX,locY);
                 ofDrawEllipse(0,0,objSizeX,objSizeY);
             ofPopMatrix();
@@ -98,6 +129,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    // if the mouse is pressed, flip the boolean value for goCrazy
     goCrazy = !goCrazy;
 }
 
