@@ -50,6 +50,10 @@ void ofApp::draw(){
         for(int j = 0; j < numY; j++){
             int locX = i * spacingX;
             int locY = j * spacingY;
+            if(goCrazy == false){
+                //locX = locX + noiseSeeds[i][j];
+                //locY = locY + noiseSeeds[i][j];
+            }
             ofPushMatrix();
                 ofTranslate(locX,locY);
                 ofDrawEllipse(0,0,objSizeX,objSizeY);
@@ -82,7 +86,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    goCrazy = !goCrazy;
 }
 
 //--------------------------------------------------------------
