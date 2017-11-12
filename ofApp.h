@@ -21,6 +21,8 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    int circleSize;
+
     int startingX;
     int startingY;
 

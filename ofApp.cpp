@@ -3,10 +3,13 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     // initialize variables
-    startingX = 0;
-    startingY = 0;
-    spacingX = ofGetWidth() / numX;
-    spacingY = ofGetHeight() / numY;
+    circleSize = 3;
+    spacingX = circleSize * 6;
+    spacingY = circleSize * 6;
+    // center matrix within variable screen size
+    // !! see if this breaks if screen size smaller than matrix needs
+    startingX = (ofGetWidth() - (spacingX * numX)) /2;
+    startingY = (ofGetHeight() - (spacingY * numY)) /2;
 
     stepSize = 20;
     goCrazy = false;
@@ -17,6 +20,8 @@ void ofApp::setup(){
             noiseSeeds[i][j] = ofRandom(0,1000);
         }
     }
+
+    ofSetBackgroundColor(0);
 
 
 }
@@ -29,6 +34,29 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+    // ghosting instead of background
+    ofSetColor(0,20);
+    ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
+
+    // reset color to default settings : white, full alpha
+    ofSetColor(255,255);
+
+    // 2D matrix
+    // center 2D matrix
+    ofTranslate(startingX, startingY);
+    // position individual circles in matrix
+    for(int i = 0; i < numX; i++){
+        for(int j = 0; j < numY; j++){
+            int locX = i * spacingX;
+            int locY = j * spacingY;
+            ofPushMatrix();
+                ofTranslate(locX,locY);
+                ofDrawCircle(0,0,circleSize);
+            ofPopMatrix();
+
+            //noiseSeeds[i][j] = ofRandom(0,1000);
+        }
+    }
 }
 
 //--------------------------------------------------------------
